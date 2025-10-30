@@ -58,6 +58,16 @@ Aplicação de configurações desenvolvida com Vue 3, PrimeVue e Tailwind segui
    npm run preview
    ```
 
+### ▶️ Executar com Docker
+
+Também é possível subir o ambiente de desenvolvimento sem precisar instalar o Node localmente. Certifique-se de ter o [Docker](https://docs.docker.com/get-docker/) e o [Docker Compose](https://docs.docker.com/compose/) instalados e então execute:
+
+```bash
+docker compose up --build
+```
+
+O comando acima monta os arquivos do projeto dentro do container, instala as dependências automaticamente e inicia o Vite em modo desenvolvimento exposto na porta `5173`. Ao finalizar, derrube o serviço com `Ctrl+C`. Para executar em segundo plano, utilize `docker compose up -d` e finalize com `docker compose down`.
+
 ## 🗂️ Estrutura de pastas
 
 ```
