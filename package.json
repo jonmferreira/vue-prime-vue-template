@@ -8,6 +8,8 @@
     "build": "vue-tsc -b && node scripts/run-vite.mjs build",
     "preview": "node scripts/run-vite.mjs preview",
     "lint": "vue-tsc --noEmit",
+    "test": "vitest run --coverage",
+    "test:watch": "vitest",
     "storybook": "storybook dev -p 6006 --no-open",
     "build-storybook": "storybook build"
   },
@@ -23,14 +25,18 @@
     "@storybook/vue3-vite": "8.4.7",
     "@types/node": "24.9.1",
     "@vitejs/plugin-vue": "5.1.4",
+    "@vitest/coverage-v8": "4.0.5",
+    "@vue/test-utils": "2.4.6",
     "@vue/tsconfig": "0.8.1",
     "autoprefixer": "10.4.20",
+    "jsdom": "27.1.0",
     "postcss": "8.4.49",
     "storybook": "8.4.7",
     "tailwindcss": "3.4.17",
     "typescript": "5.9.3",
     "vite": "5.4.11",
     "vite-plugin-pwa": "1.1.0",
+    "vitest": "4.0.5",
     "vue-tsc": "3.1.2"
   }
 }
