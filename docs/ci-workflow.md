@@ -1,10 +1,10 @@
-# Continuous Integration Workflow
+# Fluxo de Integração Contínua
 
-This repository ships a GitHub Actions workflow located at [`.github/workflows/ci.yml`](../.github/workflows/ci.yml).
-It is triggered for every pull request that targets the `main` branch and is split into multiple jobs that cooperate
-through conditional execution, caching, and shared artifacts.
+Este repositório possui um workflow do GitHub Actions em [`.github/workflows/ci.yml`](../.github/workflows/ci.yml).
+Ele é acionado para todo pull request direcionado à branch `main` e é dividido em vários jobs que cooperam
+por meio de execução condicional, cache e artefatos compartilhados.
 
-## Job overview
+## Visão geral dos jobs
 
 ```text
 Detect Changes ──┐
@@ -15,40 +15,39 @@ Detect Changes ──┐
 ```
 
 ### Detect Changes (`changes`)
-* **Purpose**: Decide whether the remaining jobs should run.
-* **Key logic**: Uses [`dorny/paths-filter`](https://github.com/dorny/paths-filter) to check if the pull request touched any of the
-  monitored paths (`src/**`, `package.json`, lockfiles, Vite and TypeScript configs).
-* **Outcomes**:
-  * When no relevant files change, the rest of the workflow is skipped without failing the pipeline.
-  * When dependency manifests change, the information is propagated so `npm ci` can be re-run.
-* **Reporting**: Writes a short Markdown summary into the job summary panel.
+* **Objetivo**: decidir se os demais jobs devem ser executados.
+* **Lógica principal**: utiliza [`dorny/paths-filter`](https://github.com/dorny/paths-filter) para verificar se o pull request alterou algum
+  dos caminhos monitorados (`src/**`, `package.json`, arquivos de lock, configs do Vite e do TypeScript).
+* **Resultados possíveis**:
+  * Quando nenhum arquivo relevante muda, o restante do workflow é ignorado sem falhar o pipeline.
+  * Quando os manifestos de dependências mudam, a informação é propagada para que o `npm ci` seja reexecutado.
+* **Relatórios**: grava um resumo curto em Markdown no painel de resumo do job.
 
 ### Prepare Dependencies (`dependencies`)
-* **Purpose**: Provide a warmed `node_modules` directory for downstream jobs.
-* **Cache behaviour**:
-  * Restores a cache keyed by the current `package-lock.json` hash.
-  * Runs `npm ci` only when the cache misses *or* dependency manifests changed in the pull request.
-  * Publishes the directory as a short-lived artifact (`node-modules`) so other jobs can reuse it.
-* **Reporting**: Always appends a status update to the job summary with cache hit/miss details.
+* **Objetivo**: disponibilizar um diretório `node_modules` aquecido para os jobs seguintes.
+* **Comportamento de cache**:
+  * Restaura um cache com chave baseada no hash atual do `package-lock.json`.
+  * Executa `npm ci` apenas quando o cache não é encontrado *ou* quando manifestos de dependências mudaram no pull request.
+  * Publica o diretório como um artefato de curta duração (`node-modules`) para reutilização.
+* **Relatórios**: sempre adiciona uma atualização de status ao resumo com detalhes de hit/miss do cache.
 
-### Build, Lint, and Tests
-* **Purpose**: Validate the project in parallel once the prerequisites are satisfied.
-* **Shared setup**:
-  * Depend on both previous jobs and only run when `Detect Changes` marked the pull request as relevant.
-  * Restore the `node-modules` artifact produced by `Prepare Dependencies` instead of reinstalling packages.
-* **Commands**:
-  * `Build`: runs `npm run build`.
-  * `Lint`: runs `npm run lint`.
-  * `Tests`: runs `npm test --if-present` (so the job passes even when no test script exists).
-* **Reporting**: Each job posts a success/failure note to its summary so reviewers can see the result at a glance.
+### Build, Lint e Tests
+* **Objetivo**: validar o projeto em paralelo quando os pré-requisitos são satisfeitos.
+* **Configuração compartilhada**:
+  * Dependem dos jobs anteriores e só executam quando `Detect Changes` marcou o pull request como relevante.
+  * Restauram o artefato `node-modules` produzido por `Prepare Dependencies` em vez de reinstalar pacotes.
+* **Comandos**:
+  * `Build`: executa `npm run build`.
+  * `Lint`: executa `npm run lint`.
+  * `Tests`: executa `npm test --if-present` (o job passa mesmo se não existir script de testes).
+* **Relatórios**: cada job registra uma nota de sucesso/erro no resumo para facilitar a revisão.
 
-## Skipping behaviour
-When a pull request only changes documentation or other non-monitored files, the workflow exits after the
-`Detect Changes` job. GitHub marks the skipped jobs as "skipped" (not failed), providing fast feedback without wasting
-compute minutes.
+## Comportamento de skip
+Quando um pull request altera apenas documentação ou outros arquivos não monitorados, o workflow encerra após o
+job `Detect Changes`. O GitHub marca os jobs seguintes como "skipped" (não falharam), oferecendo feedback rápido
+sem desperdiçar minutos de computação.
 
-## Adding richer summaries
-Job summaries accept static Markdown, so you can embed screenshots or other generated artifacts using standard
-Markdown image syntax. To showcase a running build, generate a screenshot during the job, upload it as an artifact (or
-store it within the workspace), and reference it from the summary. Streaming console output or an interactive preview
-is not supported.
+## Adicionando resumos mais ricos
+Os resumos dos jobs aceitam Markdown estático, então você pode incorporar capturas de tela ou outros artefatos gerados usando a sintaxe
+padrão de imagens. Para destacar um build em execução, gere a captura durante o job, envie-a como artefato (ou
+armazene-a no workspace) e referencie-a no resumo. Streaming de log em tempo real ou prévia interativa não é suportado.
