@@ -1,8 +1,7 @@
 import { fileURLToPath, URL } from 'node:url';
 
 import vue from '@vitejs/plugin-vue';
-import { defineConfig } from 'vite';
-import { configDefaults } from 'vitest/config';
+import { configDefaults, defineConfig } from 'vitest/config';
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -20,7 +19,7 @@ export default defineConfig({
       reporter: ['text', 'lcov'],
       reportsDirectory: 'coverage',
       exclude: [
-        ...configDefaults.coverage.exclude,
+        ...(configDefaults.coverage?.exclude ?? []),
         'src/main.ts',
         'src/router/**',
         'src/**/*.d.ts'

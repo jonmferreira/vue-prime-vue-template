@@ -90,7 +90,8 @@ describe('SettingsSidebar', () => {
       }
     });
 
-    const logoutButton = wrapper.findAll('button').at(-1);
+    const buttons = wrapper.findAll('button');
+    const logoutButton = buttons[buttons.length - 1];
     await logoutButton!.trigger('click');
 
     expect(wrapper.emitted('logout')).toHaveLength(1);

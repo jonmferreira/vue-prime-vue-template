@@ -31,7 +31,7 @@ describe('LogoutConfirmationDialog', () => {
     const wrapper = mount(LogoutConfirmationDialog);
 
     const buttons = wrapper.findAll('button');
-    const confirmButton = buttons.at(1);
+    const confirmButton = buttons[1];
     await confirmButton!.trigger('click');
 
     expect(infoSpy).toHaveBeenCalledWith('Logout confirmado');
