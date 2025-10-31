@@ -19,8 +19,12 @@ if (webcrypto && globalThis.crypto !== webcrypto) {
   }
 }
 
-if (typeof globalThis.crypto.hash !== 'function') {
-  globalThis.crypto.hash = function hash(algorithm, data, outputEncoding = 'hex') {
+const ensureHash = () => {
+  if (typeof globalThis.crypto.hash === 'function' && typeof nodeCrypto.hash === 'function') {
+    return;
+  }
+
+  const hashPolyfill = function hash(algorithm, data, outputEncoding = 'hex') {
     const hash = createHash(algorithm);
     if (typeof data === 'string' || ArrayBuffer.isView(data) || data instanceof ArrayBuffer) {
       hash.update(data);
@@ -29,7 +33,22 @@ if (typeof globalThis.crypto.hash !== 'function') {
     }
     return outputEncoding ? hash.digest(outputEncoding) : hash.digest();
   };
-}
+
+  if (typeof globalThis.crypto.hash !== 'function') {
+    globalThis.crypto.hash = hashPolyfill;
+  }
+
+  if (typeof nodeCrypto.hash !== 'function') {
+    Object.defineProperty(nodeCrypto, 'hash', {
+      configurable: true,
+      enumerable: true,
+      writable: true,
+      value: hashPolyfill,
+    });
+  }
+};
+
+ensureHash();
 
 if (typeof globalThis.crypto.getRandomValues !== 'function') {
   if (webcrypto && typeof webcrypto.getRandomValues === 'function') {
