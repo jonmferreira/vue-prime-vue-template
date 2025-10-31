@@ -28,7 +28,7 @@
       <section v-if="showContent" class="flex-1">
         <RouterView v-slot="{ Component }">
           <Transition name="fade" mode="out-in">
-            <component :is="Component" :key="$route.fullPath" />
+            <component :is="Component" :key="route.fullPath" />
           </Transition>
         </RouterView>
       </section>
