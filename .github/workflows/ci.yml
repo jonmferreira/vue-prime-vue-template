@@ -79,11 +79,14 @@ jobs:
         if: steps.cache-node-modules.outputs.cache-hit != 'true' || needs.changes.outputs.deps_changed == 'true'
         run: npm ci
 
+      - name: Archive node modules
+        run: tar -czf node_modules.tar.gz node_modules
+
       - name: Upload node modules artifact
         uses: actions/upload-artifact@v4
         with:
           name: node-modules
-          path: node_modules
+          path: node_modules.tar.gz
           retention-days: 1
 
       - name: Job summary
@@ -119,7 +122,11 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: node-modules
-          path: node_modules
+
+      - name: Extract node modules
+        run: |
+          tar -xzf node_modules.tar.gz
+          rm node_modules.tar.gz
 
       - name: Build
         run: npm run build
@@ -152,7 +159,11 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: node-modules
-          path: node_modules
+
+      - name: Extract node modules
+        run: |
+          tar -xzf node_modules.tar.gz
+          rm node_modules.tar.gz
 
       - name: Lint
         run: npm run lint
@@ -185,7 +196,11 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: node-modules
-          path: node_modules
+
+      - name: Extract node modules
+        run: |
+          tar -xzf node_modules.tar.gz
+          rm node_modules.tar.gz
 
       - name: Test
         run: npm test --if-present
