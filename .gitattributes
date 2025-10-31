@@ -1,0 +1,2 @@
+# Ensure shell scripts keep Unix line endings so Docker entrypoints run correctly
+*.sh text eol=lf
