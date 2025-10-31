@@ -178,8 +178,8 @@ jobs:
             echo "Linting failed. Review the logs above for details." >> $GITHUB_STEP_SUMMARY
           fi
 
-  test:
-    name: Tests
+  vitest:
+    name: Vitest
     runs-on: ubuntu-latest
     needs: [changes, dependencies]
     if: needs.changes.outputs.should_run == 'true'
@@ -202,15 +202,15 @@ jobs:
           tar -xzf node_modules.tar.gz
           rm node_modules.tar.gz
 
-      - name: Test
+      - name: Run unit tests
         run: npm test --if-present
 
       - name: Job summary
         if: always()
         run: |
-          echo "## Tests" >> $GITHUB_STEP_SUMMARY
+          echo "## Vitest" >> $GITHUB_STEP_SUMMARY
           if [ "${{ job.status }}" = "success" ]; then
-            echo "Tests ran successfully (or no tests were configured)." >> $GITHUB_STEP_SUMMARY
+            echo "Unit tests executed successfully." >> $GITHUB_STEP_SUMMARY
           else
             echo "Tests failed. Review the logs above for details." >> $GITHUB_STEP_SUMMARY
           fi
