@@ -4,6 +4,8 @@ import DialogService from 'primevue/dialogservice';
 import DynamicDialog from 'primevue/dynamicdialog';
 import { VueQueryPlugin, QueryClient } from '@tanstack/vue-query';
 
+import { registerSW } from 'virtual:pwa-register';
+
 import App from './App.vue';
 import router from './router';
 import './assets/main.css';
@@ -29,3 +31,13 @@ app.use(VueQueryPlugin, { queryClient });
 app.component('DynamicDialog', DynamicDialog);
 
 app.mount('#app');
+
+registerSW({
+  immediate: true,
+  onNeedRefresh() {
+    console.info('Uma nova versão do aplicativo está disponível. Atualize para aplicar as melhorias.');
+  },
+  onOfflineReady() {
+    console.info('Aplicativo pronto para uso offline.');
+  }
+});
