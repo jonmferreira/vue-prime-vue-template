@@ -104,6 +104,10 @@ As histórias do Storybook vivem próximas aos componentes (`*.stories.ts`).
 
 Consulte o arquivo [`VERCEL_DEPLOY.md`](./VERCEL_DEPLOY.md) para o passo a passo de publicação na Vercel.
 
+## 🔁 Fluxo de CI
+
+Para entender como o pipeline de integração contínua foi estruturado, veja o guia dedicado em [`docs/ci-workflow.md`](./docs/ci-workflow.md).
+
 ---
 
 Feito com ❤️ usando Vue, PrimeVue e Tailwind.
