@@ -9,7 +9,19 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm ci
 
-# Copy the rest of the source code
+FROM base AS runtime-storybook
+
+# Copy the rest of the source code for Storybook
+COPY . .
+
+EXPOSE 6006
+
+# Command to run Storybook in dev mode
+CMD ["npm", "run", "storybook", "--", "--host", "0.0.0.0", "--port", "6006"]
+
+FROM base AS runtime-dev
+
+# Copy the rest of the source code for Vite dev server
 COPY . .
 
 EXPOSE 5173
