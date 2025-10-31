@@ -7,7 +7,8 @@ WORKDIR /app
 
 # Install dependencies separately to leverage Docker layer caching
 COPY package*.json ./
-RUN npm ci
+RUN npm ci \
+  && sha256sum package-lock.json | cut -d' ' -f1 > /app/node_modules/.package-lock.hash
 
 FROM base AS runtime-base
 
